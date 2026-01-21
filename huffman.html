@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Huffman Coding - Kelompok UAS</title>
+    <style>
+        :root {
+            /* Warna sesuai request Ketua */
+            --primary-color: #9932CC; 
+            --bg-color: #ffffff;
+            --card-bg: #ffffff;
+            --text-color: #1e293b;
+            --secondary-bg: #f3e8ff; /* Ungu muda untuk aksen */
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .card {
+            background: var(--card-bg);
+            padding: 2rem;
+            border-radius: 12px;
+            /* Border ungu tipis agar terlihat rapi di background putih */
+            border: 2px solid var(--primary-color);
+            box-shadow: 0 4px 15px rgba(153, 50, 204, 0.1);
+            margin-bottom: 20px;
+        }
+
+        h1, h2, h3 {
+            color: var(--primary-color);
+            text-align: center;
+        }
+
+        textarea {
+            width: 100%;
+            height: 120px;
+            padding: 12px;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 16px;
+            margin-bottom: 15px;
+            resize: vertical;
+            box-sizing: border-box;
+        }
+
+        textarea:focus {
+            outline: none;
+            border-color: var(--primary-color);
+        }
+
+        button {
+            width: 100%;
+            background-color: var(--primary-color);
+            color: white;
+            padding: 15px;
+            border: none;
+            border-radius: 8px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.2s, background 0.3s;
+        }
+
+        button:hover {
+            background-color: #802bb1;
+            transform: translateY(-2px);
+        }
+
+        .result-section {
+            display: none;
+            margin-top: 30px;
+            animation: fadeIn 0.5s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+
+        table, th, td {
+            border: 1px solid #ddd;
+        }
+
+        th {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 12px;
+        }
+
+        td {
+            padding: 12px;
+            text-align: center;
+        }
+
+        tr:nth-child(even) {
+            background-color: var(--secondary-bg);
+        }
+
+        .binary-output {
+            background: #2d1a3d; /* Ungu gelap untuk area kode */
+            color: #d8b4fe;
+            padding: 20px;
+            border-radius: 8px;
+            word-break: break-all;
+            font-family: 'Courier New', Courier, monospace;
+            border-left: 5px solid var(--primary-color);
+        }
+
+        .stats-container {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .stat-card {
+            background: var(--secondary-bg);
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+            border: 1px solid var(--primary-color);
+        }
+
+        .stat-value {
+            display: block;
+            font-size: 24px;
+            font-weight: bold;
+            color: var(--primary-color);
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="card">
+        <h1>Kompresi Teks Huffman</h1>
+        <p style="text-align: center;">Masukkan teks untuk dianalisis dan dikompresi menggunakan Algoritma Huffman.</p>
+        
+        <textarea id="inputText" placeholder="Contoh: Belajar Algoritma itu menyenangkan!"></textarea>
+        <button onclick="processHuffman()">PROSES ALGORITMA</button>
+    </div>
+
+    <div id="resultSection" class="result-section card">
+        <h2>Hasil Analisis & Kompresi</h2>
+        
+        <div class="stats-container">
+            <div class="stat-card">
+                <span class="stat-value" id="originalSize">0</span>
+                Bit Awal (ASCII)
+            </div>
+            <div class="stat-card">
+                <span class="stat-value" id="compressedSize">0</span>
+                Bit Terkompresi
+            </div>
+            <div class="stat-card">
+                <span class="stat-value" id="saving">0%</span>
+                Efisiensi Hemat
+            </div>
+        </div>
+
+        <h3>Tabel Huffman Tree</h3>
+        <table id="huffmanTable">
+            <thead>
+                <tr>
+                    <th>Karakter</th>
+                    <th>Frekuensi</th>
+                    <th>Kode Biner</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+
+        <h3>Visualisasi Data Terkompresi</h3>
+        <div class="binary-output" id="binaryOutput"></div>
+    </div>
+</div>
+
+<script>
+    function processHuffman() {
+        const text = document.getElementById('inputText').value;
+        if (!text) {
+            alert("Harap masukkan teks terlebih dahulu!");
+            return;
+        }
+
+        // 1. Hitung Frekuensi
+        let freq = {};
+        for (let char of text) {
+            freq[char] = (freq[char] || 0) + 1;
+        }
+
+        // 2. Buat Node
+        let nodes = Object.keys(freq).map(char => ({
+            char,
+            freq: freq[char],
+            left: null,
+            right: null
+        }));
+
+        // 3. Bangun Tree
+        while (nodes.length > 1) {
+            nodes.sort((a, b) => a.freq - b.freq);
+            let left = nodes.shift();
+            let right = nodes.shift();
+            
+            let newNode = {
+                char: null,
+                freq: left.freq + right.freq,
+                left,
+                right
+            };
+            nodes.push(newNode);
+        }
+
+        let root = nodes[0];
+        let codes = {};
+
+        // 4. Generate Kode
+        function generateCodes(node, currentCode) {
+            if (!node) return;
+            if (node.char !== null) {
+                codes[node.char] = currentCode || "0";
+                return;
+            }
+            generateCodes(node.left, currentCode + "0");
+            generateCodes(node.right, currentCode + "1");
+        }
+        generateCodes(root, "");
+
+        // 5. Update Tabel Tampilan
+        const tbody = document.querySelector("#huffmanTable tbody");
+        tbody.innerHTML = "";
+        
+        // Urutkan berdasarkan frekuensi terbanyak (opsional, biar rapi)
+        const sortedChars = Object.keys(freq).sort((a,b) => freq[b] - freq[a]);
+        
+        for (let char of sortedChars) {
+            let displayChar = char === " " ? "(Spasi)" : (char === "\n" ? "(Enter)" : char);
+            tbody.innerHTML += `<tr>
+                <td><strong>${displayChar}</strong></td>
+                <td>${freq[char]}</td>
+                <td style="color:var(--primary-color); font-weight:bold;">${codes[char]}</td>
+            </tr>`;
+        }
+
+        // 6. Encode
+        let encodedText = "";
+        for (let char of text) {
+            encodedText += codes[char];
+        }
+
+        // 7. Statistik
+        let originalBits = text.length * 8;
+        let compressedBits = encodedText.length;
+        let saving = ((originalBits - compressedBits) / originalBits * 100).toFixed(1);
+
+        document.getElementById('originalSize').innerText = originalBits;
+        document.getElementById('compressedSize').innerText = compressedBits;
+        document.getElementById('saving').innerText = saving + "%";
+        document.getElementById('binaryOutput').innerText = encodedText;
+
+        document.getElementById('resultSection').style.display = 'block';
+        
+        // Auto scroll ke hasil
+        document.getElementById('resultSection').scrollIntoView({ behavior: 'smooth' });
+    }
+</script>
+
+</body>
+</html>
