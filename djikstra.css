@@ -1,0 +1,125 @@
+:root {
+    --primary-color: #9932CC;
+    --bg-color: #ffffff;
+    --light-purple: #f8f0ff;
+    --border-radius: 12px;
+}
+
+body {
+    font-family: 'Segoe UI', sans-serif;
+    background-color: #fcfaff;
+    margin: 0;
+    padding: 20px;
+    color: #333;
+}
+
+.top-nav {
+    max-width: 900px;
+    margin: 0 auto 15px auto;
+}
+
+/* Styling Tombol Kembali */
+.btn-back {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 20px;
+    background-color: #f3e5f5; /* Ungu sangat muda sesuai gambar */
+    color: #9932CC;
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 14px;
+    border: 1.5px solid #d1c4e9;
+    border-radius: 12px; 
+    transition: all 0.3s ease; 
+    margin-bottom: 10px;
+}
+
+.btn-back:hover {
+    background-color: #9932CC; 
+    color: white; 
+    transform: translateX(-5px); 
+    box-shadow: 0 4px 12px rgba(153, 50, 204, 0.2);
+}
+
+
+.back-link {
+    text-decoration: none;
+    color: var(--primary-color);
+    font-weight: bold;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.main-container {
+    max-width: 900px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.card {
+    background: white;
+    border: 2px solid var(--primary-color);
+    border-radius: var(--border-radius);
+    padding: 25px;
+    box-shadow: 0 4px 15px rgba(153, 50, 204, 0.1);
+    text-align: center;
+}
+
+h2, h3 { color: var(--primary-color); margin-top: 0; }
+.subtitle { color: #666; font-size: 14px; margin-bottom: 20px; }
+
+.controls {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+}
+
+input[type="number"] {
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    width: 80px;
+    text-align: center;
+    font-size: 16px;
+}
+
+.btn-primary {
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    padding: 12px 40px;
+    border-radius: 8px;
+    font-weight: bold;
+    cursor: pointer;
+    letter-spacing: 1px;
+    transition: 0.3s;
+}
+
+.btn-primary:hover { background-color: #7a28a5; }
+
+canvas {
+    max-width: 100%;
+    height: auto;
+}
+
+.distance-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 15px;
+    margin-top: 20px;
+}
+
+.distance-item {
+    background: var(--light-purple);
+    padding: 15px;
+    border-radius: 10px;
+    border: 1px solid #e0d0f0;
+}
+
+.dist-label { font-size: 12px; color: #666; display: block; }
+.dist-val { font-size: 20px; font-weight: bold; color: var(--primary-color); }
