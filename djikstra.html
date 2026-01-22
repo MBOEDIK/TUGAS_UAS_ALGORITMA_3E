@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Visualisasi Algoritma Dijkstra</title>
+    <link rel="stylesheet" href="djikstra.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <nav class="top-nav">
+        <a href="index.html" class="btn-back">
+            <span class="arrow">←</span> Kembali ke Menu Utama
+        </a>
+    </nav>
+
+    <div class="main-container">
+        <div class="card card-input">
+            <h2>Visualisasi Jalur Terpendek Dijkstra</h2>
+            <p class="subtitle">Pilih titik awal untuk menganalisis jarak terpendek ke semua titik dalam graf.</p>
+            
+            <div class="controls">
+                <input type="number" id="startNode" min="0" max="9" value="0" placeholder="0-9">
+                <button onclick="calculateDijkstra()" class="btn-primary">PROSES ALGORITMA</button>
+            </div>
+        </div>
+
+        <div class="card card-graph">
+            <canvas id="graphCanvas" width="600" height="350"></canvas>
+        </div>
+
+        <div class="card card-results" id="resultsBox">
+            <h3>Hasil Analisis Jarak Terpendek</h3>
+            <div id="distanceGrid" class="distance-grid">
+                </div>
+        </div>
+    </div>
+
+    <script src="djikstra.js"></script>
+</body>
+</html>
