@@ -62,10 +62,21 @@ button {
     border-radius: 8px;
     cursor: pointer;
     font-size: 14px;
+    transition: 0.5s;
+
+    a {
+        text-decoration: none;
+        color: #000;
+        transition: 0.5s;
+    }
 }
 
 button:hover {
     background-color: #7b26a6;
+
+    a {
+        color: #ffffff;
+    }
 }
 
 footer {
